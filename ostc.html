@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bring Native to the Web: an introduction to Emscripten and asm.js</title>
+  <meta name="author" content="张频 (Pin Zhang)">
+
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/sky.css" id="theme">
+
+  <!-- Code syntax highlight -->
+  <link rel="stylesheet" href="lib/css/zenburn.css">
+
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+
+  <!--[if lt IE 9]>
+  <script src="lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+      <section>
+        <h2>Bring Native to the Web</h2>
+        <h4>An introduction to Emscripten and asm.js</h4>
+        <h4>张 频</h4>
+        <p>
+          <small>pzhang@mozilla.com</small>
+        </p>
+        <p>
+          <img width="20%" src="mozilla_wordmark.png" />
+        </p>
+      </section>
+      <section>
+        <h2>Outline</h2>
+        <ul>
+          <li>What is Emscripten and asm.js?</li>
+          <li>Performance comparison and demos</li>
+          <li>Emscriptem tutorial</li>
+          <li>Connecting C/C++ and Javascript</li>
+          <li>Limitations</li>
+        </ul>
+      </section>
+      <section>
+        <h3>About Emscripten</h3>
+        <p>An open source LLVM to Javascript compiler</p>
+        <p>Complie C/C++ code into Javascript</p>
+        <p>Execute at close to native speed</p>
+        <p>Use standard web technologies</p>
+        <p>Integrated into Unity3D, Unreal Engine etc.</p>
+        <p>Created by <a target="_blank" href="https://www.mozilla.org/">Mozilla</a></p>
+      </section>
+      <section>
+        <h3>Why Emscripten?</h3>
+        <p>Lots of powerful and stable tools in the native world</p>
+        <p>Rewritting in JS is time consuming or even impossible</p>
+        <p>TODO (python demos)</p>
+        <p>Running on the web!</p>
+        <p>You app could reach all the platforms</p>
+        <p>Javascript engine is highly optimized and getting faster</p>
+      </section>
+      <section>
+        <h3>ASM.js</h3>
+        <p>A low-level subset of Javascript, easy to be optimized (AOT)</p>
+        <p>Enabled by prologue directive like strict mode</p>
+        <pre><code contenteditable>
+          function asmCode(global, env, buffer) {
+            'use asm';
+            var HEAP = new global.Uint8Array(buffer);
+            function fib_like(x) {
+              x = x|0;
+              if ((x >>> 0) < 2) return HEAP[x]|0;
+              return ((fib_like((x-2)|0)|0) + (fib_like((x-1)|0)|0))|0;
+            }
+            return fib_like;
+          }
+        </code></pre>
+        <p></p>
+        <p><b>HEAP</b> is a virtual heap as <b>typed arrays</b></p>
+        <p><b>|0</b> trick ensures 32-bit ints</p>
+      </section>
+      <section>
+        <h3>asm.js cont.</h3>
+        <pre><code contenteditable>
+          // sample c code
+          int increase(int a) {
+            return a + 1;
+          }
+        </code></pre>
+        <pre><code contenteditable>
+          // generated asm.js code
+          function _increase(a){
+            a=a|0;
+            return a+1|0
+          }
+        </code></pre>
+      </section>
+      <section>
+        <h3>Demos</h3>
+        <p>Running Python and Lua in web page.</p>
+        <p>Box2D</p>
+        <p>Angry Bots</p>
+        <p>
+          <img src="angrybots.png">
+          <img src="DEAD-TRIGGER.png">
+        </p>
+      </section>
+      <section>
+        <h3><b>asm.js Performance</b></h3>
+        <a href="benchmarks.png"><img src="benchmarks.png"></img></a>
+        <br>
+        <p><small>Emscripten benchmark suite (VMs and Emscripten from Sep 13 2013, run on 64-bit ubuntu 12.04)</small></p>
+      </section>
+      <section>
+        <h3>Performance - Box2D</h3>
+        <a class="fragment" href="box2d_graph_updated2.png"><img src="box2d_graph_updated2.png"></a>
+        <p class="fragment">
+          <small>source: <a href="https://twitter.com/jgw">@jgw</a>, <a href="http://j15r.com/blog/2013/07/05/Box2d_Addendum">Box2D Addendum</a>; axis is time slower than native, lower is better</small>
+        </p>
+        <table class="fragment" style="margin-left: auto; margin-right: auto;">
+          <tr><td><b>Box2dWeb -</b></td><td width="5%"></td><td>Port using "typical" JS</td></tr>
+          <tr><td><b>asm.js -</b></td><td></td><td>Port using asm.js</td></tr>
+        </table>
+        <br>
+        <p class="fragment">
+          asm.js is <strong>faster</strong> than "typical" JavaScript on Internet Explorer, Chrome and Firefox
+        </p>
+      </section>
+      <section>
+        <h3>Performance - Browser</h3>
+        <a href="http://blog.mozilla.org/hacks/files/2014/05/BenchmarkGraph_windows-500.png">
+          <img src="BenchmarkGraph_windows-500.png">
+        </a>
+        <p>
+          <small><a href="https://hacks.mozilla.org/2014/05/asm-js-performance-improvements-in-the-latest-version-of-firefox-make-games-fly/">https://hacks.mozilla.org/2014/05/asm-js-performance-improvements-in-the-latest-version-of-firefox-make-games-fly/</a></small>
+        </p>
+      </section>
+      <section>
+        <h3>Emscripten toolchain</h3>
+        <p>
+          <img src="EmscriptenToolchain.png">
+        </p>
+      </section>
+      <section>
+        <h3>Emscripten tutorial - download and install</h3>
+        <p>Download emsdk, install and activate the latest branch</p>
+        <pre><code contenteditable>
+          $ ./emsdk update
+        </code></pre>
+        <pre><code contenteditable>
+          $ ./emsdk install latest
+        </code></pre>
+        <pre><code contenteditable>
+          $ ./emsdk activate latest
+        </code></pre>
+        <pre><code contenteditable>
+          $ source ./emsdk_env.sh
+        </code></pre>
+        <p>
+          <small><a href="http://kripken.github.io/emscripten-site/docs/getting_started/downloads.html">http://kripken.github.io/emscripten-site/docs/getting_started/downloads.html</a></small>
+        </p>
+      </section>
+      <section>
+        <h3>Emscripten tutorial cont.</h3>
+        <p>Compile test codes in the SDK</p>
+        <pre><code contenteditable>
+          $ cd $EMSDK/emscripten/latest
+          $ ./emcc tests/hello_world.c
+        </code></pre>
+        <p>Run generated code in node.js</p>
+        <pre><code contenteditable>
+          $ node a.out.js
+        </code></pre>
+        <p>Generate and run code in browser</p>
+        <pre><code contenteditable>
+          $ ./emcc tests/hello_world.c -o hello_world.html
+        </code></pre>
+      </section>
+      <section>
+        <h3>Inside the generated code</h3>
+        <p>Most of the codes are framework and libraries</p>
+        <p>9k+ codes are generated (unoptimized)</p>
+        <p>Code size: 350k, zipped size: 84K</p>
+        <pre><code contenteditable>
+          $ ./emcc -O2 --closure 1 tests/hello_world.c
+        </code></pre>
+        <p>Code size: 85K, zipped size: 83k</p>
+        <pre><code contenteditable>
+  // Generated Javascript codes with `-O1`
+  function _main() {
+   var label = 0, sp = 0; 
+   sp = STACKTOP;
+   (_puts((8|0))|0);
+   STACKTOP = sp;return 0;
+  }
+        </code></pre>
+        <p></p>
+      </section>
+      <section>
+        <h3>Emscripten Runtime Environment</h3>
+        <p>Implemented <b>libc</b> and <b>libcxx</b> and a virtual file system</p>
+        <p>Default file system <b>MEMFS</b> stores files in-memory</p>
+        <p><b>IDBFS</b> could be mounted to persist the data</p>
+        <p><b>NODEFS</b> could be mounted access the real files</p>
+        <p>Implemented Simple DirectMedia Layer API (<b>SDL</b>)</p>
+        <p><small>provides low level access to audio, keyboard, mouse, joystick, and graphics hardware</small></p>
+      </section>
+      <section>
+        <h3>Connecting C++ and Javascript</h3>
+        <p>Call compiled C from Javascript</p>
+        <p>C++ binding</p>
+        <p>Call Javascript from C/C++</p>
+        <p><small>There are thoundsands of browser native APIs, geolocation, webrtc etc.</small></p>
+      </section>
+      <section>
+        <section>
+          <h3>Call compiled C function from JS</h3>
+          <p>C code</p>
+          <pre><code contenteditable>
+  // int_sqrt.c
+  #include &lt;math.h&gt;
+  int int_sqrt(int x) {
+      return sqrt(x);
+  }
+          </code></pre>
+          <p>Compile to Javascript</p>
+          <pre><code contenteditable>
+          $ emcc int_sqrt.c -s EXPORTED_FUNCTIONS="['_int_sqrt']"
+          </code></pre>
+          <small>We need <b>-s EXPORTED_FUNCTIONS</b> to keep functions from being optimized.</small>
+        </section>
+        <section>
+          <h3>Call `int_sqrt` from Javascript</h3>
+          <p>cwrap</p>
+          <pre><code contenteditable>  // Javascript
+  var int_sqrt = Module.cwrap('int_sqrt', 'number', ['number'])
+  var result = int_sqrt(12)
+          </code></pre>
+          <p>ccall</p>
+          <pre><code contenteditable>  // Javascript
+  var result = Module.ccall(
+    'int_sqrt', // name of C function
+    'number',   // return type
+    ['number'], // argument types
+    [28]);      // arguments
+          </code></pre>
+        </section>
+      </section>
+      <section>
+        <section>
+          <h3>C++ binding - <b>WebIDL Binder</b></h3>
+          <p>A lightweight approach to <b>binding</b> C++</p>
+          <p>Use <b><a target="_blank" href="http://www.w3.org/TR/WebIDL/">WebIDL</a></b> to define bindings</p>
+          <p>Support <b>subset</b> of C++ types that can be expressed in WebIDL</p>
+          <p>This subset is more than <b>sufficient</b> for most use cases</p>
+          <p>Have been used in porting <b><a target="_blank" href="https://github.com/kripken/box2d.js/#box2djs">Box2D</a></b> and <b><a target="_blank" href="https://github.com/kripken/ammo.js/#ammojs">Bullet</a></b></p>
+        </section>
+        <section>
+          <h3>WebIDL Binder</h3>
+          <table style="width: 100%; margin-left: auto; margin-right: auto;">
+            <tr width="100%">
+              <td width="50%" style="text-align: center">foobar.h</td>
+              <td style="text-align: center">foobar.webidl</td>
+            </tr>
+            <tr>
+              <td><pre><code contenteditable>
+  class Foo {
+  private:
+    int value;
+  public:
+    int getValue();
+    void setValue(int value);
+  };
+
+  class Bar {
+  private:
+    long value;
+  public:
+    Bar(long value);
+    void doSomething();
+  };
+              </code></pre></td>
+              <td><pre><code contenteditable>
+  // foobar.webidl
+  interface Foo {
+    void Foo();
+    long getValue();
+    void setValue(long value);
+  };
+
+  interface Bar {
+    void Bar(long v);
+    void doSomething();
+  };
+              </code></pre></td>
+            </tr>
+          </table>
+          <p><small>There is no `int` in WebIDL, use `long` instead, <a target="_blank" href="http://kripken.github.io/emscripten-site/docs/porting/connecting_cpp_and_javascript/WebIDL-Binder.html#webidl-types">here</a> is detailed type mapping</small></p>
+          <p></p>
+        </section>
+        <section>
+          <h3>WebIDL Binder</h3>
+          <p>Generate glue codes</p>
+          <pre><code contenteditable>
+          $ cd $EMSDK/emscripten/lastest
+          $ python tools/webidl_binder.py foobar.webidl
+          </code></pre>
+          <small><b>glue.cpp</b> and <b>glue.js</b> are generated</small>
+          <p><b>#include</b> the headers you are binding and <b>glue.cpp</b></p>
+          <pre><code contenteditable>
+   // glue_wrapper.cpp
+   #include "foobar.h"
+   #include "glue.cpp"
+          </code></pre>
+          <p>Compile them together</p>
+          <pre><code contenteditable>
+   $ emcc foobar.cpp glue_wrapper.cpp --post-js glue.js -o foobar.js
+          </code></pre>
+        </section>
+        <section>
+          <h3>Using C++ classes in Javascript</h3>
+          <pre><code contenteditable>
+   var foo = new Module.Foo();
+   foo.setValue(100);
+   console.log(foo.getValue());
+
+   var bar = new Module.Bar();
+   bar.doSomething();
+          </code></pre>
+          <p>Destroy the object if needed, i.e. C++ class have destructor</p>
+          <pre><code contenteditable>
+   Module.destroy(foo);
+   Module.destroy(bar);
+          </code></pre>
+        </section>
+        <section>
+          <h3>WebIDL Binder</h3>
+          <p>Sub-classing C++ base classes in JS</p>
+          <p>Use JSImplementation in WebIDL</p>
+          <pre><code contenteditable>
+  // `Base` is the C++ class
+  [JSImplementation="Base"]
+  interface ImplJS {
+          void ImplJS();
+          void virtualFunc();
+  };
+          </code></pre>
+          <p>Implement the interface in JS</p>
+          <pre><code contenteditable>
+  var o = new ImplJS();
+  o.virtualFunc = function() { ... };
+          </code></pre>
+          <small>When C++ code has a pointer to a Base instance and calls virtualFunc(), that call will reach the JavaScript code defined above.</small>
+        </section>
+      </section>
+      <section>
+        <section>
+          <h3>Call compiled C++ from JS - <b>Embind</b></h3>
+          <p>Bind C++ functions and classes to Javascript</p>
+          <p>Was inspired by <b><a target="_blank" href="http://www.boost.org/doc/libs/1_56_0/libs/python/doc/">Boost.Python</a></b></p>
+          <p>Need to add some binding declaration codes</p>
+          <p>No extra tool, say WebIDL, is needed</p>
+        </section>
+        <section>
+          <h3>Embind - binding functions</h3>
+          <pre><code contenteditable>  // sample.cpp
+  size_t cpp_strlen(std::string str) {
+    return str.length();
+  }       </code></pre>
+          <pre><code contenteditable>  // say my_binding.cpp
+  #include &lt;emscripten/bind.h&gt;
+  #include "sample.h"
+  using namespace emscripten;
+  EMSCRIPTEN_BINDINGS(cpp_funcs) {
+    function("cpp_strlen", &amp;cpp_strlen);
+  }       </code></pre>
+          <small>Add binding declaration to exsiting files or a single one</small>
+          <p>Compile and call from Javascript</p>
+          <pre><code contenteditable>  $ emcc sample.cpp my_binding.cpp --bind -EXPORTED_FUNCTIONS=["cpp_strlen"]</code></pre>
+          <pre><code contenteditable>  // Call compiled binding function from javascript
+  console.log("The length is: " + cpp_strlen("some string here")); </code></pre>
+        </section>
+        <section>
+          <h3>Embind - binding classes</h3>
+          <pre><code contenteditable>   // sample.h
+  class ClassA {
+    int value;
+  public:
+    ClassA(int aValue);
+    void setValue(int aValue);
+    int getValue() const;
+    static void printSomething();
+  };      </code></pre>
+          <pre><code contenteditable>  // my_bindings.cpp
+  #include &lt;emscripten/bind.h&gt;
+  #include "sample.h"
+  EMSCRIPTEN_BINDINGS(cpp_class) {
+    class_&lt;ClassA&gt;("ClassA")
+      .constructor&lt;int&gt;()
+      .property("value", &amp;ClassA::getValue, &amp;ClassA::setValue)
+      .class_function("printSomething", &amp;ClassA::printSomething)
+      ;
+  }         </code></pre>
+          <p></p>
+        </section>
+        <section>
+          <h3>Embind - binding classes cont.</h3>
+          <p>Compile and call from Javascript</p>
+          <pre><code contenteditable>  $ emcc sample.cpp my_binding.cpp --bind -EXPORTED_FUNCTIONS=["cpp_strlen"]</code></pre>
+          <pre><code contenteditable>  // Call from Javascript
+  var obj = new Module.ClassA(100);
+  console.log("ClassA::getValue: " + obj.getValue());
+  Module.ClassA.printSomething()
+  // The C++ object must be deleted.
+  sampleObj.delete(); </code></pre>
+          <p>Javascript does not support <b>finalizers</b> or weak references with callbacks</p>
+          <p>JavaScript code must explicitly <b>delete</b> any C++ object handles it has received, or the Emscripten heap will grow indefinitely.</p>
+        </section>
+        <section>
+          <h3>Embind - derive from C++ classes</h3>
+          <pre><code contenteditable>  // sample.h
+  class MyInterface {
+  private:
+    std::string name = "My Interface Name";
+
+  public:
+    const std::string getName();
+    virtual void invoke(const std::string&amp; str) = 0;
+  };      </code></pre>
+          <pre><code contenteditable>  // my_bindings.cpp
+  class MyInterfaceWrapper : public wrapper&lt;MyInterface&gt; {
+  public:
+    EMSCRIPTEN_WRAPPER(MyInterfaceWrapper);
+    void invoke(const std::string&amp; str) {
+      return call&lt;void&gt;("invoke", str);
+    }
+  };
+  EMSCRIPTEN_BINDINGS(cpp_interface) {
+    class_&lt;MyInterface&gt;("MyInterface")
+      .function("invoke", &amp;MyInterface::invoke, pure_virtual())
+      .function("getName", &amp;MyInterface::getName)
+      .allow_subclass&lt;MyInterfaceWrapper&gt;("MyInterfaceWrapper")
+      ;
+  }       </code></pre>
+        </section>
+      </section>
+      <section>
+        <h3>Call Javascript from C/C++</h3>
+        <p>Direct call, but slightly slow</p>
+        <pre><code contenteditable>  // sample.c
+  #include &lt;emscripten.h&gt;
+  int main() {
+    emscripten_run_script("console.log('hi')");
+  }     </code></pre>
+        <p>Inline Javascript by using macro <b>EM_ASM()</b></p>
+        <pre><code contenteditable>  // sample.c
+  #include &lt;emscripten.h&gt;
+  int main() {
+    EM_ASM(
+      console.log('Hello world!');
+    );
+  }     </code></pre>
+      </section>
+      <section>
+        <h3>Call Javascript from C/C++, cont.</h3>
+        <p>Implement a C API in JavaScript</p>
+        <pre><code contenteditable>  // sample.c
+  #include &lt;emscripten.h&gt;
+  // Declare function defined in Javascript
+  extern int js_strlen(const char* str);
+
+  int main() {
+    const char* str = "string for testing";
+    int len = js_strlen(str);
+    printf("The length of '%s' is %d.\n", str, len);
+  }     </code></pre>
+        <p>Make the JS implementation as part of the libraries</p>
+        <pre><code contenteditable>  // my_lib.js
+  mergeInto(LibraryManager.library, {
+    js_strlen: function(str) {
+      return Pointer_stringify(str).length;
+    },
+  }     </code></pre>
+      </section>
+      <section>
+        <h3>Call Javascript from C/C++, cont.</h3>
+        <p>Compile the lib file together</p>
+        <pre><code contenteditable>  $ emcc sample.c --js-library lib.js</code></pre>
+        <p>Run the compiled code</p>
+        <pre><code contenteditable>  $ node a.out.js</code></pre>
+        <p>Here is the output:</p>
+        <pre><code contenteditable>  The length of 'string for testing' is 18.</code></pre>
+      </section>
+      <section>
+        <h3>Call Javascript from C/C++, cont.</h3>
+        <p>Use <b>emscripten::val</b> to transliterate JS to C++</p>
+        <p><b>emscripten::val</b> is part of Embind</p>
+        <pre><code contenteditable>  // Javascript
+  // Get web audio api context
+  var AudioContext = window.AudioContext || window.webkitAudioContext;
+
+  // Got an AudioContext: Create context and OscillatorNode
+  var context = new AudioContext();
+  var oscillator = context.createOscillator();
+
+  // Configuring oscillator: set OscillatorNode type and frequency
+  oscillator.type = 'triangle';
+  oscillator.frequency.value = 261.63; // value in hertz - middle C
+
+  // Playing
+  oscillator.connect(context.destination);
+  oscillator.start();
+
+  // All done! </code></pre>
+      </section>
+      <section>
+        <h3>Call Javascript from C/C++, cont.</h3>
+        <pre><code style="max-height: 100% !important" contenteditable>  // C++
+  #include &lt;emscripten/val.h&gt;
+  #include &lt;stdio.h&gt;
+  #include &lt;math.h&gt;
+
+  using namespace emscripten;
+  int main() {
+    val AudioContext = val::global("AudioContext");
+    if (!AudioContext.as&lt;bool&gt;()) {
+      printf("No global AudioContext, trying webkitAudioContext\n");
+      AudioContext = val::global("webkitAudioContext");
+    }
+
+    printf("Got an AudioContext\n");
+    val context = AudioContext.new_();
+    val oscillator = context.call&lt;val&gt;("createOscillator");
+
+    printf("Configuring oscillator\n");
+    oscillator.set("type", val("triangle"));
+    oscillator["frequency"].set("value", val(261.63)); // Middle C
+
+    printf("Playing\n");
+    oscillator.call&lt;void&gt;("connect", context["destination"]);
+    oscillator.call&lt;void&gt;("start", 0);
+    printf("All done!\n");
+  }     </code></pre>
+      </section>
+      <section>
+        <h3>Limitations</h3>
+        <p>Thread</p>
+        <p>File System</p>
+        <p>Browser main loop</p>
+        <p>Networking (non-blocking)</p>
+        <p>64-bit</p>
+      </section>
+      <section>
+        <h1><b>Q & A</b></h1>
+      </section>
+    </div>
+    </div>
+  </div>
+
+  <script src="lib/js/head.min.js"></script>
+  <script src="js/reveal.js"></script>
+  <script>
+    // Full list of configuration options available at:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+    controls: true,
+    progress: true,
+    history: true,
+    center: true,
+
+    transition: Reveal.getQueryHash().transition || 'fade', // none/fade/slide/convex/concave/zoom
+
+    // Optional reveal.js plugins
+    dependencies: [
+      { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+      { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+      { src: 'plugin/zoom-js/zoom.js', async: true },
+      { src: 'plugin/notes/notes.js', async: true }
+    ]
+    });
+  </script>
+</body>
+</html>
