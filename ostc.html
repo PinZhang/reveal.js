@@ -34,6 +34,19 @@
     padding: 0 !important;
   }
 
+  strong {
+    color: #41C;
+  }
+
+  .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+    text-transform: none !important;
+    font-weight: bold;
+  }
+
+  .reveal h1, .reveal h2, .reveal h3 {
+    color: #369;
+  }
+
   /* styles for line number */
   pre {
     counter-reset: lines;
@@ -88,7 +101,7 @@
       </section>
       <section>
         <section>
-          <h2>What is Emscriptem and asm.js?</h2>
+          <h3>What is Emscriptem and asm.js?</h3>
         </section>
         <section>
           <h3>About Emscripten</h3>
@@ -109,7 +122,7 @@
           <p>Javascript engine is highly optimized and getting faster</p>
         </section>
         <section>
-          <h3>ASM.js</h3>
+          <h3>asm.js</h3>
           <p>A low-level subset of Javascript, easy to be optimized (AOT)</p>
           <p>Enabled by prologue directive like strict mode</p>
           <pre><code class="javascript linenodes" contenteditable>// Sample codes in asm.js
@@ -124,8 +137,8 @@ function asmCode(global, env, buffer) {
   return fib_like;
 }         </code></pre>
           <p></p>
-          <p><b>HEAP</b> is a virtual heap as <b>typed arrays</b></p>
-          <p><b>|0</b> trick ensures 32-bit ints</p>
+          <p><strong>HEAP</strong> is a virtual heap as <strong>typed arrays</strong></p>
+          <p><strong>|0</strong> trick ensures 32-bit ints</p>
         </section>
         <section>
           <h3>asm.js cont.</h3>
@@ -142,7 +155,7 @@ function _increase(a){
       </section>
       <section>
         <section>
-          <h2>Performance comparison and demos</h2>
+          <h3>Performance comparison and demos</h3>
         </section>
         <section>
           <h3>Demos</h3>
@@ -155,7 +168,7 @@ function _increase(a){
           </p>
         </section>
         <section>
-          <h3><b>asm.js Performance</b></h3>
+          <h3>asm.js Performance</h3>
           <a href="benchmarks.png"><img src="benchmarks.png"></img></a>
           <br>
           <p><small>Emscripten benchmark suite (VMs and Emscripten from Sep 13 2013, run on 64-bit ubuntu 12.04)</small></p>
@@ -167,8 +180,8 @@ function _increase(a){
             <small>source: <a href="https://twitter.com/jgw">@jgw</a>, <a href="http://j15r.com/blog/2013/07/05/Box2d_Addendum">Box2D Addendum</a>; axis is time slower than native, lower is better</small>
           </p>
           <table class="fragment" style="margin-left: auto; margin-right: auto;">
-            <tr><td><b>Box2dWeb -</b></td><td width="5%"></td><td>Port using "typical" JS</td></tr>
-            <tr><td><b>asm.js -</b></td><td></td><td>Port using asm.js</td></tr>
+            <tr><td><strong>Box2dWeb -</strong></td><td width="5%"></td><td>Port using "typical" JS</td></tr>
+            <tr><td><strong>asm.js -</strong></td><td></td><td>Port using asm.js</td></tr>
           </table>
           <br>
           <p class="fragment">
@@ -187,7 +200,7 @@ function _increase(a){
       </section>
       <section>
         <section>
-          <h2>Emscripten tutorial</h2>
+          <h3>Emscripten tutorial</h3>
         </section>
         <section>
           <h3>Emscripten toolchain</h3>
@@ -234,17 +247,17 @@ function _main() {
         </section>
         <section>
           <h3>Emscripten Runtime Environment</h3>
-          <p>Implemented <b>libc</b> and <b>libcxx</b> and a virtual file system</p>
-          <p>Default file system <b>MEMFS</b> stores files in-memory</p>
-          <p><b>IDBFS</b> could be mounted to persist the data</p>
-          <p><b>NODEFS</b> could be mounted access the real files</p>
-          <p>Implemented Simple DirectMedia Layer API (<b>SDL</b>)</p>
+          <p>Implemented <strong>libc</strong> and <strong>libcxx</strong> and a virtual file system</p>
+          <p>Default file system <strong>MEMFS</strong> stores files in-memory</p>
+          <p><strong>IDBFS</strong> could be mounted to persist the data</p>
+          <p><strong>NODEFS</strong> could be mounted access the real files</p>
+          <p>Implemented Simple DirectMedia Layer API (<strong>SDL</strong>)</p>
           <p><small>provides low level access to audio, keyboard, mouse, joystick, and graphics hardware</small></p>
         </section>
       </section>
       <section>
         <section>
-          <h2>Connecting C++ and Javascript</h2>
+          <h3>Connecting C++ and Javascript</h3>
         </section>
         <section>
           <h3>Connecting C++ and Javascript</h3>
@@ -268,7 +281,7 @@ int int_sqrt(int x) {
 }       </code></pre>
           <p>Compile to Javascript</p>
           <pre><code contenteditable>$ emcc int_sqrt.c -s EXPORTED_FUNCTIONS="['_int_sqrt']" </code></pre>
-          <small>We need <b>-s EXPORTED_FUNCTIONS</b> to keep functions from being optimized.</small>
+          <small>We need <strong>-s EXPORTED_FUNCTIONS</strong> to keep functions from being optimized.</small>
         </section>
         <section>
           <h3>Call `int_sqrt` from Javascript</h3>
@@ -287,15 +300,15 @@ var result = Module.ccall(
       </section>
       <section>
         <section>
-          <h3>Part II: C++ binding, WebIDL Binder</h3>
+          <h3>Part II: C++ binding, <strong>WebIDL Binder</strong></h3>
         </section>
         <section>
-          <h3>C++ binding - <b>WebIDL Binder</b></h3>
-          <p>A lightweight approach to <b>binding</b> C++</p>
-          <p>Use <b><a target="_blank" href="http://www.w3.org/TR/WebIDL/">WebIDL</a></b> to define bindings</p>
-          <p>Support <b>subset</b> of C++ types that can be expressed in WebIDL</p>
-          <p>This subset is more than <b>sufficient</b> for most use cases</p>
-          <p>Have been used in porting <b><a target="_blank" href="https://github.com/kripken/box2d.js/#box2djs">Box2D</a></b> and <b><a target="_blank" href="https://github.com/kripken/ammo.js/#ammojs">Bullet</a></b></p>
+          <h3>C++ binding - <strong>WebIDL Binder</strong></h3>
+          <p>A lightweight approach to <strong>binding</strong> C++</p>
+          <p>Use <strong><a target="_blank" href="http://www.w3.org/TR/WebIDL/">WebIDL</a></strong> to define bindings</p>
+          <p>Support <strong>subset</strong> of C++ types that can be expressed in WebIDL</p>
+          <p>This subset is more than <strong>sufficient</strong> for most use cases</p>
+          <p>Have been used in porting <strong><a target="_blank" href="https://github.com/kripken/box2d.js/#box2djs">Box2D</a></strong> and <strong><a target="_blank" href="https://github.com/kripken/ammo.js/#ammojs">Bullet</a></strong></p>
         </section>
         <section>
           <h3>WebIDL Binder</h3>
@@ -341,8 +354,8 @@ interface Bar {
           <p>Generate glue codes</p>
           <pre><code contenteditable>$ cd $EMSDK/emscripten/lastest
 $ python tools/webidl_binder.py foobar.webidl  </code></pre>
-          <small><b>glue.cpp</b> and <b>glue.js</b> are generated</small>
-          <p><b>#include</b> the headers you are binding and <b>glue.cpp</b></p>
+          <small><strong>glue.cpp</strong> and <strong>glue.js</strong> are generated</small>
+          <p><strong>#include</strong> the headers you are binding and <strong>glue.cpp</strong></p>
           <pre><code contenteditable>// glue_wrapper.cpp
 #include "foobar.h"
 #include "glue.cpp"  </code></pre>
@@ -379,12 +392,12 @@ o.virtualFunc = function() { ... }; </code></pre>
       </section>
       <section>
         <section>
-          <h2>Part III: <b>Embind</b></h2>
+          <h3>Part III: <strong>Embind</strong></h3>
         </section>
         <section>
-          <h3>Call compiled C++ from JS - <b>Embind</b></h3>
+          <h3>Call compiled C++ from JS - <strong>Embind</strong></h3>
           <p>Bind C++ functions and classes to Javascript</p>
-          <p>Was inspired by <b><a target="_blank" href="http://www.boost.org/doc/libs/1_56_0/libs/python/doc/">Boost.Python</a></b></p>
+          <p>Was inspired by <strong><a target="_blank" href="http://www.boost.org/doc/libs/1_56_0/libs/python/doc/">Boost.Python</a></strong></p>
           <p>Need to add some binding declaration codes</p>
           <p>No extra tool, say WebIDL, is needed</p>
         </section>
@@ -401,11 +414,13 @@ using namespace emscripten;
 EMSCRIPTEN_BINDINGS(cpp_funcs) {
   function("cpp_strlen", &amp;cpp_strlen);
 }         </code></pre>
-          <small>Add binding declaration to exsiting files or a single one</small>
+          <small>Add binding declaration to exsiting files or a separate file</small>
         </section>
         <section>
-          <p>Compile and call from Javascript</p>
+          <h3>Compile and call from Javascript</h3>
+          <p>Compile with <strong>--bind</strong></p>
           <pre style="margin-left: 0; margin-right: 0; width: 100%;"><code contenteditable>$ emcc sample.cpp my_binding.cpp --bind -EXPORTED_FUNCTIONS=["cpp_strlen"]</code></pre>
+          <p>Call compiled code from Javascript</p>
           <pre style="width: 100%;"><code contenteditable>// Call compiled binding function from javascript
 console.log("The length is: " + cpp_strlen("some string here")); </code></pre>
         </section>
@@ -442,8 +457,8 @@ console.log("ClassA::getValue: " + obj.getValue());
 Module.ClassA.printSomething()
 // The C++ object must be deleted.
 sampleObj.delete(); </code></pre>
-          <p>Javascript does not support <b>finalizers</b> or weak references with callbacks</p>
-          <p>JavaScript code must explicitly <b>delete</b> any C++ object handles it has received, or the Emscripten heap will grow indefinitely.</p>
+          <p>Javascript does not support <strong>finalizers</strong> or weak references with callbacks</p>
+          <p>JavaScript code must explicitly <strong>delete</strong> any C++ object handles it has received, or the Emscripten heap will grow indefinitely.</p>
         </section>
         <section>
           <h3>Embind - derive from C++ classes</h3>
@@ -475,7 +490,7 @@ EMSCRIPTEN_BINDINGS(cpp_interface) {
       </section>
       <section>
         <section>
-          <h2>Call Javascript from C/C++</h2>
+          <h3>Call Javascript from C/C++</h3>
         </section>
         <section>
           <h3>Call Javascript from C/C++</h3>
@@ -485,7 +500,7 @@ EMSCRIPTEN_BINDINGS(cpp_interface) {
 int main() {
   emscripten_run_script("console.log('hi')");
 }       </code></pre>
-          <p>Inline Javascript by using macro <b>EM_ASM()</b></p>
+          <p>Inline Javascript by using macro <strong>EM_ASM()</strong></p>
           <pre><code contenteditable>// sample.c
 #include &lt;emscripten.h&gt;
 int main() {
@@ -526,8 +541,8 @@ mergeInto(LibraryManager.library, {
         </section>
         <section>
           <h3>Call Javascript from C/C++, cont.</h3>
-          <p>Use <b>emscripten::val</b> to transliterate JS to C++</p>
-          <p><b>emscripten::val</b> is part of Embind</p>
+          <p>Use <strong>emscripten::val</strong> to transliterate JS to C++</p>
+          <p><strong>emscripten::val</strong> is part of Embind</p>
           <pre style="width: 100%;"><code contenteditable>// Javascript
 // Get web audio api context
 var AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -585,7 +600,7 @@ int main() {
         <p>64-bit</p>
       </section>
       <section>
-        <h1><b>Q & A</b></h1>
+        <h1><strong>Q & A</strong></h1>
       </section>
     </div>
     </div>
