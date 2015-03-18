@@ -105,6 +105,14 @@
         </ul>
       </section>
       <section>
+        <h2>About Mozilla</h2>
+        <p>Non-profit orgnization</p>
+        <p>Our <b>mission</b> is to promote <b>openness</b>, <b>innovation</b> &amp; <b>opportunity</b> on the Web</p>
+        <p>1000+ employees in 15 countries</p>
+        <p>500+ million users</p>
+        <img src="firefox-products.png">
+      </section>
+      <section>
         <section>
           <h3>What is Emscriptem and asm.js?</h3>
         </section>
@@ -121,7 +129,6 @@
           <h3>Why Emscripten?</h3>
           <p>Lots of powerful and stable tools in the native world</p>
           <p>Rewritting in JS is time consuming or even impossible</p>
-          <p>TODO (python demos)</p>
           <p>Running on the web!</p>
           <p>You app could reach all the platforms</p>
           <p>Javascript engine is highly optimized and getting faster</p>
@@ -147,10 +154,12 @@ function asmCode(global, env, buffer) {
         </section>
         <section>
           <h3>asm.js cont.</h3>
+          <p>Sample C code</p>
           <pre><code contenteditable>// sample c code
 int increase(int a) {
   return a + 1;
 }       </code></pre>
+        <p>Compiled Javascript code</p>
         <pre><code contenteditable>// generated asm.js code
 function _increase(a){
   a=a|0;
@@ -168,8 +177,8 @@ function _increase(a){
           <p>Box2D</p>
           <p>Angry Bots</p>
           <p>
-            <img src="angrybots.png">
-            <img src="DEAD-TRIGGER.png">
+            <a href="http://beta.unity3d.com/jonas/AngryBots/" target="_blank"><img src="angrybots.png"></a>
+            <a href="http://beta.unity3d.com/jonas/DT2/" target="_blank"><img src="DEAD-TRIGGER.png"></a>
           </p>
         </section>
         <section>
@@ -180,16 +189,16 @@ function _increase(a){
         </section>
         <section>
           <h3>Performance - Box2D</h3>
-          <a class="fragment" href="box2d_graph_updated2.png"><img src="box2d_graph_updated2.png"></a>
-          <p class="fragment">
+          <a href="box2d_graph_updated2.png"><img src="box2d_graph_updated2.png"></a>
+          <p>
             <small>source: <a href="https://twitter.com/jgw">@jgw</a>, <a href="http://j15r.com/blog/2013/07/05/Box2d_Addendum">Box2D Addendum</a>; axis is time slower than native, lower is better</small>
           </p>
-          <table class="fragment" style="margin-left: auto; margin-right: auto;">
+          <table style="margin-left: auto; margin-right: auto;">
             <tr><td><strong>Box2dWeb -</strong></td><td width="5%"></td><td>Port using "typical" JS</td></tr>
             <tr><td><strong>asm.js -</strong></td><td></td><td>Port using asm.js</td></tr>
           </table>
           <br>
-          <p class="fragment">
+          <p>
             asm.js is <strong>faster</strong> than "typical" JavaScript on Internet Explorer, Chrome and Firefox
           </p>
         </section>
@@ -210,7 +219,7 @@ function _increase(a){
         <section>
           <h3>Emscripten toolchain</h3>
           <p>
-            <img src="EmscriptenToolchain.png">
+            <a href="http://kripken.github.io/emscripten-site/docs/introducing_emscripten/about_emscripten.html?highlight=emscripten%20toolchain#emscripten-toolchain" target="_blank"><img src="EmscriptenToolchain.png"></a>
           </p>
         </section>
         <section>
