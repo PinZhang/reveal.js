@@ -174,7 +174,7 @@ function _increase(a){
         </section>
         <section>
           <h3>Demos</h3>
-          <p>Running Python and <a href="http://kripken.github.io/lua.vm.js/repl.html" target="_blank">Lua</a> in web page.</p>
+          <p>Running <a href="http://pinzhang.github.io/emscripten-python/index.html" target="_blank">Python</a> and <a href="http://kripken.github.io/lua.vm.js/repl.html" target="_blank">Lua</a> in web page.</p>
           <p><a href="http://kripken.github.io/box2d.js/webgl_demo/box2d.html">Box2D</a></p>
           <p>Angry Bots</p>
           <p>
@@ -184,34 +184,18 @@ function _increase(a){
           <p><a target="_blank" href="https://github.com/kripken/emscripten/wiki/Porting-Examples-and-Demos">Here</a> are more examples and demos</p>
         </section>
         <section>
-          <h3>asm.js Performance</h3>
-          <a href="benchmarks.png"><img src="benchmarks.png"></img></a>
-          <br>
-          <p><small>Emscripten benchmark suite (VMs and Emscripten from Sep 13 2013, run on 64-bit ubuntu 12.04)</small></p>
-        </section>
-        <section>
-          <h3>Performance - Box2D</h3>
-          <a href="box2d_graph_updated2.png"><img src="box2d_graph_updated2.png"></a>
+          <h3>asm.js Performance - Box2D</h3>
+          <a href="box2d_benchmark.png"><img src="box2d_benchmark.png"></a>
+          <small>source: <a href="https://twitter.com/jgw">@jgw</a>, <a href="http://www.j15r.com/blog/2014/05/23/Box2d_2014_Update">Box2D 2014 Update</a>; axis is time slower than native, lower is better</small>
           <p>
-            <small>source: <a href="https://twitter.com/jgw">@jgw</a>, <a href="http://j15r.com/blog/2013/07/05/Box2d_Addendum">Box2D Addendum</a>; axis is time slower than native, lower is better</small>
-          </p>
-          <table style="margin-left: auto; margin-right: auto;">
-            <tr><td><strong>Box2dWeb -</strong></td><td width="5%"></td><td>Port using "typical" JS</td></tr>
-            <tr><td><strong>asm.js -</strong></td><td></td><td>Port using asm.js</td></tr>
-          </table>
-          <br>
-          <p>
-            asm.js is <strong>faster</strong> than "typical" JavaScript on Internet Explorer, Chrome and Firefox
+            asm.js is <strong>faster</strong> than "typical" JavaScript (<strong>Box2dWeb</strong>) on Internet Explorer, Chrome and Firefox
           </p>
         </section>
         <section>
-          <h3>Performance - Browser</h3>
-          <a href="http://blog.mozilla.org/hacks/files/2014/05/BenchmarkGraph_windows-500.png">
-            <img src="BenchmarkGraph_windows-500.png">
-          </a>
-          <p>
-            <small><a href="https://hacks.mozilla.org/2014/05/asm-js-performance-improvements-in-the-latest-version-of-firefox-make-games-fly/">https://hacks.mozilla.org/2014/05/asm-js-performance-improvements-in-the-latest-version-of-firefox-make-games-fly/</a></small>
-          </p>
+          <h3>asm.js Performance - Unity3D</h3>
+          <a href="unity3D_benchmarks.png"><img width="100%" src="unity3D_benchmarks.png"></img></a>
+          <small>Run on 15” Retina MacBook Pro 2.6 GHz i7 running OS X 10.10</small>
+          <small>Source: <a href="http://blogs.unity3d.com/cn/2014/10/07/benchmarking-unity-performance-in-webgl/" target="_blank">http://blogs.unity3d.com/cn/2014/10/07/benchmarking-unity-performance-in-webgl/</a></small>
         </section>
       </section>
       <section>
