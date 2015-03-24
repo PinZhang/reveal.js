@@ -212,13 +212,14 @@ function _increase(a){
         <section>
           <h3>Emscripten tutorial - download and install</h3>
           <p>Download emsdk, install and activate the latest branch</p>
-          <pre><code contenteditable>$ ./emsdk update</code></pre>
-          <pre><code contenteditable>$ ./emsdk install latest</code></pre>
-          <pre><code contenteditable>$ ./emsdk activate latest</code></pre>
-          <pre><code contenteditable>$ source ./emsdk_env.sh</code></pre>
           <p>
             <small><a href="http://kripken.github.io/emscripten-site/docs/getting_started/downloads.html">http://kripken.github.io/emscripten-site/docs/getting_started/downloads.html</a></small>
           </p>
+          <pre class="fragment"><code contenteditable>$ cd $EMSDK_HOME/</code></pre>
+          <pre class="fragment"><code contenteditable>$ ./emsdk update</code></pre>
+          <pre class="fragment"><code contenteditable>$ ./emsdk install latest</code></pre>
+          <pre class="fragment"><code contenteditable>$ ./emsdk activate latest</code></pre>
+          <pre class="fragment"><code contenteditable>$ source ./emsdk_env.sh</code></pre>
         </section>
         <section>
           <h3>Emscripten tutorial cont.</h3>
@@ -229,12 +230,14 @@ int main() {
   printf("hello, world!\n");
   return 0;
 }         </code></pre>
-          <pre><code contenteditable>$ cd $EMSDK/emscripten/latest
+          <pre class="fragment"><code contenteditable>$ cd $EMSDK/emscripten/latest
 $ ./emcc tests/hello_world.c </code></pre>
-          <p>Run generated code in node.js</p>
-          <pre><code contenteditable>$ node a.out.js</code></pre>
-          <p>Generate and run code in browser</p>
-          <pre><code contenteditable>$ ./emcc tests/hello_world.c -o hello_world.html</code></pre>
+          <p class="fragment">Run generated code in node.js</p>
+          <pre class="fragment"><code contenteditable>$ node a.out.js</code></pre>
+          <p class="fragment">Generate and run code in browser</p>
+          <pre class="fragment"><code contenteditable>$ ./emcc tests/hello_world.c -o hello_world.html</code></pre>
+
+          <aside class="notes">Demo in real console.</aside>
         </section>
         <section>
           <h3>Inside the generated code</h3>
@@ -268,10 +271,18 @@ function _main() {
         </section>
         <section>
           <h3>Connecting C++ and Javascript</h3>
-          <p>Call compiled C from Javascript</p>
-          <p>C++ binding</p>
-          <p>Call Javascript from C/C++</p>
-          <p><small>There are thoundsands of browser native APIs, geolocation, webrtc etc.</small></p>
+          <p class="fragment">Call compiled C from Javascript</p>
+          <aside class="notes">How to use the compiled lib in JS.</aside>
+          <p class="fragment">
+            C++ binding
+            <br/>
+            <small>name mangling</small>
+          </p>
+          <aside class="notes">C++ name mangling, use compiled C++ codes in the OO way</aside>
+          <p class="fragment">Call Javascript from C/C++
+            <small>There are thoundsands of browser native APIs, geolocation, webrtc etc.</small>
+          </p>
+          <aside class="notes">Call JS native APIs for the sake of performance and code size</aside>
         </section>
       </section>
       <section>
@@ -477,7 +488,7 @@ private:
 public:
   const std::string getName();
   virtual void invoke(const std::string&amp; str) = 0;
-};      </code></pre>
+};        </code></pre>
           <pre><code contenteditable>// my_bindings.cpp
 class MyInterfaceWrapper : public wrapper&lt;MyInterface&gt; {
 public:
@@ -492,7 +503,26 @@ EMSCRIPTEN_BINDINGS(cpp_interface) {
     .function("getName", &amp;MyInterface::getName)
     .allow_subclass&lt;MyInterfaceWrapper&gt;("MyInterfaceWrapper")
     ;
-}       </code></pre>
+}         </code></pre>
+        </section>
+        <section>
+          <h3>Embind - derive from C++ classes, cont.</h3>
+          <p><strong>extend</strong> or <strong>implement</strong> the interface in JS</p>
+          <pre><code contenteditable>// Use `extend` to subclass in Javascript
+var DerivedClass = Module.Interface.extend("Interface", {
+  invoke: function(str) {
+    // Your code goes here
+    console.log('invoking with: ' + str);
+  }
+});
+var instance = new DerivedClass;     </code></pre>
+          <pre class="fragment"><code contenteditable>// Use an object to `implement` the interface
+var x = {
+  invoke: function(str) {
+    console.log('invoking with: ' + str);
+  }
+};
+var interfaceObject = Module.Interface.implement(x);     </code></pre>
         </section>
       </section>
       <section>
@@ -505,14 +535,14 @@ EMSCRIPTEN_BINDINGS(cpp_interface) {
           <pre><code contenteditable>// sample.c
 #include &lt;emscripten.h&gt;
 int main() {
-  emscripten_run_script("console.log('hi')");
+  emscripten_run_script("alert('hi')");
 }       </code></pre>
           <p>Inline Javascript by using macro <strong>EM_ASM()</strong></p>
           <pre><code contenteditable>// sample.c
 #include &lt;emscripten.h&gt;
 int main() {
   EM_ASM(
-    console.log('Hello world!');
+    alert('Hello world!');
   );
 }         </code></pre>
         </section>
@@ -600,11 +630,30 @@ int main() {
       </section>
       <section>
         <h3>Limitations</h3>
-        <p>Thread</p>
-        <p>File System</p>
-        <p>Browser main loop</p>
-        <p>Networking (non-blocking)</p>
-        <p>64-bit</p>
+        <p class="fragment">
+          Thread
+          <br/>
+          <small>JS has threads (web workers), but they cannot share state</small>
+        </p>
+        <p class="fragment">
+          File System
+          <br/>
+          <small>All files exist in-memory</small>
+        </p>
+        <p class="fragment">
+          Browser main loop
+          <br/>
+          <small>Use <em>emscripten_set_main_loop</em> to break the infinite loop</small>
+        </p>
+        <p class="fragment">
+          Networking (non-blocking)
+          <small>Socket API are implemented on top of WebSocket</small>
+        </p>
+        <p class="fragment">
+          64-bit
+          <br />
+          <small>Mathematical operations are emulated and slow</small>
+        </p>
       </section>
       <section>
         <h1><strong>Q & A</strong></h1>
