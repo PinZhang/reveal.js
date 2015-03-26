@@ -117,23 +117,27 @@
           <h3>What is Emscriptem and asm.js?</h3>
         </section>
         <section>
+          <h3>Why Emscripten?</h3>
+          <p class="fragment">Web is the <strong>largest open</strong> platform in existence</p>
+          <p class="fragment"><strong>HTML</strong>, <strong>CSS</strong> and <strong>Javascript</strong> are <strong>native</strong> on the web</p>
+          <p class="fragment">Lots of powerful and stable tools in the native world</p>
+          <p class="fragment">C/C++ is not part of the web standards, :(</p>
+          <aside class="notes">Rewrite in JS is time consuming and even impossible.</aside>
+          <p class="fragment">ActiveX, Flash, pNaCl and NPAPI are not standardized</p>
+          <aside class="notes">Plugins and proposals for new entirely technologies on the web have failed to reach significant adoption or standardization, for both technical and non-technical reasons. Like Coffeescript, Darts etc. And plugins are on the way out, no plugins on iOS and Firefox OS.</aside>
+          <p class="fragment">Why not compile C/C++ into Javascript</p>
+          <p class="fragment"><strong><a href="http://kripken.github.io/emscripten-site/index.html" target="_blank">Emscripten</a></strong> was born! \o/</p>
+        </section>
+        <section>
           <h3>About Emscripten</h3>
           <p>An open source LLVM to Javascript compiler</p>
           <p>Complie C/C++ code into Javascript</p>
-          <p>C/C++ <ruby>----<rt><strong>clang</strong></rt></ruby>&gt; llvm <ruby>------<rt><strong>Fastcomp</strong></rt></ruby>&gt; javascript</p>
+          <p>C/C++ <ruby>----<rt><strong>clang</strong></rt></ruby>&gt; llvm <ruby>------<rt><strong>Fastcomp</strong></rt></ruby>&gt; Javascript (<strong>asm.js</strong>)</p>
           <p>Execute at close to native speed</p>
           <p>Use standard web technologies</p>
           <p>Integrated into Unity3D, Unreal Engine etc.</p>
-          <p>Created by <a target="_blank" href="https://www.mozilla.org/">Mozilla</a></p>
-        </section>
-        <section>
-          <h3>Why Emscripten?</h3>
-          <p>Lots of powerful and stable tools in the native world</p>
-          <p>Rewritting in JS is time consuming or even impossible</p>
-          <p>Running on the web!</p>
-          <p>Your apps can reach all the platforms</p>
-          <p>Execute at close to native speed</p>
           <p>Javascript engines are highly optimized and getting faster</p>
+          <p>Created by <a target="_blank" href="https://www.mozilla.org/">Mozilla</a></p>
         </section>
         <section>
           <h3>asm.js</h3>
