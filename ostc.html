@@ -137,8 +137,19 @@
         </section>
         <section>
           <h3>asm.js</h3>
-          <p>A low-level subset of Javascript, easy to be optimized (AOT)</p>
+          <p>A low-level subset of Javascript</p>
+          <p>Only primitive types, no object and string etc.</p>
+          <p>Easy to be optimized (AOT)</p>
           <p>Enabled by prologue directive like strict mode</p>
+          <pre><code class="javascript linenodes" contenteditable>// Sample codes in asm.js
+function asmModule() {
+  'use asm';
+  // module body
+}         </code></pre>
+        </section>
+        <section>
+          <h3>asm.js cont.</h3>
+          <p>Sample asm.js codes</p>
           <pre><code class="javascript linenodes" contenteditable>// Sample codes in asm.js
 function asmCode(global, env, buffer) {
   'use asm';
@@ -153,6 +164,24 @@ function asmCode(global, env, buffer) {
           <p></p>
           <p><strong>HEAP</strong> is a virtual heap as <strong>typed arrays</strong></p>
           <p><strong>|0</strong> trick ensures 32-bit ints</p>
+        </section>
+        <section>
+          <h3>asm.js cont.</h3>
+          <p>Virtual memory in generated codes.</p>
+          <pre><code contenteditable>// virtual memory in generated codes
+var buffer = new ArrayBuffer(TOTAL_MEMORY);
+HEAP8 = new Int8Array(buffer);
+HEAP16 = new Int16Array(buffer);
+HEAP32 = new Int32Array(buffer);
+HEAPU8 = new Uint8Array(buffer);
+HEAPU16 = new Uint16Array(buffer);
+HEAPU32 = new Uint32Array(buffer);
+HEAPF32 = new Float32Array(buffer);
+HEAPF64 = new Float64Array(buffer); </code></pre>
+          <p>Load the 16-bit integer at byte offset p:</p>
+          <pre><code contenteditable>HEAP16[p&gt;&gt;1]|0</code></pre>
+          <p>Load the 32-bit integer at byte offset p:</p>
+          <pre><code contenteditable>HEAP32[p&gt;&gt;2]|0</code></pre>
         </section>
         <section>
           <h3>asm.js cont.</h3>
