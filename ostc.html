@@ -182,10 +182,10 @@ HEAPU16 = new Uint16Array(buffer);
 HEAPU32 = new Uint32Array(buffer);
 HEAPF32 = new Float32Array(buffer);
 HEAPF64 = new Float64Array(buffer); </code></pre>
-          <p>Load the 16-bit integer at byte offset p:</p>
-          <pre><code contenteditable>HEAP16[p&gt;&gt;1]|0</code></pre>
-          <p>Load the 32-bit integer at byte offset p:</p>
-          <pre><code contenteditable>HEAP32[p&gt;&gt;2]|0</code></pre>
+          <p>Access memory at byte offset p:</p>
+          <pre><code contenteditable>HEAP16[p&gt;&gt;1]
+HEAP32[p&gt;&gt;2]</code></pre>
+          <p>Emscripten's memory layout is identical to LLVM's, so can use all LLVM opts</p>
         </section>
         <section>
           <h3>asm.js cont.</h3>
@@ -294,7 +294,8 @@ function _main() {
           <p>Default file system <strong>MEMFS</strong> stores files in-memory</p>
           <p><strong>IDBFS</strong> could be mounted to persist the data</p>
           <p><strong>NODEFS</strong> could be mounted access the real files</p>
-          <p>Implemented Simple DirectMedia Layer API (<strong>SDL</strong>)</p>
+          <p>Implemented <strong>SDL</strong>, <strong>OpenGL</strong> etc.</p>
+          <aside class="notes">SDL: Simple DirectMedia Layer API</aside>
           <p><small>provides low level access to audio, keyboard, mouse, joystick, and graphics hardware</small></p>
         </section>
       </section>
